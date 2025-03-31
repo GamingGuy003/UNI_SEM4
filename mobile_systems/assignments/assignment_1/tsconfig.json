@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",        // Or "ES2016", "ES2017", "ESNext"
+    "module": "CommonJS",      // Use "ESNext" if you are using ESM
+    "outDir": "./dist",        // Compiled JavaScript output folder
+    "rootDir": "./src",        // Source files location
+    "strict": true,            // Enable strict mode
+    "esModuleInterop": true,   // Allow default imports from CommonJS modules
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],   // Include all TypeScript files in src/
+  "exclude": ["node_modules"]   // Exclude node_modules
+}
+
