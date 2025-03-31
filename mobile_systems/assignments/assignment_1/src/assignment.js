@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var users_1 = require("./users");
 function isWeak(passwd) {
-    return passwd == passwd.toLowerCase() && passwd.length < 8;
+    return passwd === passwd.toLowerCase() && passwd.length < 8;
 }
 function isStrong(passwd) {
     if (passwd.length > 30)
         return true;
-    if (passwd.length > 15 && passwd != passwd.toLowerCase())
+    if (passwd.length > 15 && passwd !== passwd.toLowerCase())
         return true;
     if (passwd.length > 10 && /[A-Z]/.test(passwd) && /[a-z]/.test(passwd) && /[0-9]/.test(passwd))
         return true;
@@ -45,6 +45,43 @@ function resetWeak() {
     }
 }
 function sortByAge() {
-    return users_1.users.sort(function (a, b) { return a.birthdate.age - b.birthdate.age; });
+    return users_1.users
+        .sort(function (a, b) { return a.birthdate.age - b.birthdate.age; });
 }
-console.log(sortByAge());
+function countNationalities() {
+    var nationalities = [];
+    var _loop_2 = function (user) {
+        if (!nationalities.some(function (elem) { return elem === user.nationality; }))
+            nationalities.push(user.nationality);
+    };
+    for (var _i = 0, users_3 = users_1.users; _i < users_3.length; _i++) {
+        var user = users_3[_i];
+        _loop_2(user);
+    }
+    return nationalities.length;
+}
+function notExampleDomain() {
+    return users_1.users.filter(function (user) { return !/@example\.com$/.test(user.email); });
+}
+function mostCommanEmail() {
+    var domains = [];
+    var _loop_3 = function (user) {
+        // get only domain part of email
+        var userDomain = user.email.split('@')[1];
+        // either increment domain count or add new one if not found yet
+        if (domains.some(function (domain) { return domain.domain === userDomain; })) {
+            var domain = domains.find(function (domain) { return domain.domain === userDomain; });
+            if (domain)
+                domain.count++;
+        }
+        else {
+            domains.push({ 'domain': userDomain, 'count': 1 });
+        }
+    };
+    for (var _i = 0, _a = notExampleDomain(); _i < _a.length; _i++) {
+        var user = _a[_i];
+        _loop_3(user);
+    }
+    return domains.sort(function (a, b) { return a.count - b.count; })[0];
+}
+console.log(mostCommanEmail());

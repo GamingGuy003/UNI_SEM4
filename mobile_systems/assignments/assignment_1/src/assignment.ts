@@ -1,12 +1,12 @@
 import { users, Name, User } from "./users"
 
 function isWeak(passwd: string): boolean {
-  return passwd == passwd.toLowerCase() && passwd.length < 8
+  return passwd === passwd.toLowerCase() && passwd.length < 8
 }
 
 function isStrong(passwd: string): boolean {
   if (passwd.length > 30) return true
-  if (passwd.length > 15 && passwd != passwd.toLowerCase()) return true
+  if (passwd.length > 15 && passwd !== passwd.toLowerCase()) return true
   if (passwd.length > 10 && /[A-Z]/.test(passwd) && /[a-z]/.test(passwd) && /[0-9]/.test(passwd)) return true
   return false
 }
@@ -47,3 +47,34 @@ function sortByAge(): User[] {
     .sort((a: User, b: User) => a.birthdate.age - b.birthdate.age)
 }
 
+function countNationalities(): number {
+  let nationalities: string[] = []
+  for (const user of users) {
+    if (!nationalities.some(elem => elem === user.nationality))
+      nationalities.push(user.nationality)
+  }
+  return nationalities.length
+}
+
+function notExampleDomain(): User[] {
+  return users.filter(user => !/@example\.com$/.test(user.email))
+}
+
+function mostCommanEmail(): {'domain': string, 'count': number } {
+  let domains: { 'domain': string, 'count': number }[] = []
+  for (const user of notExampleDomain()) {
+    // get only domain part of email
+    let userDomain = user.email.split('@')[1]
+    // either increment domain count or add new one if not found yet
+    if (domains.some(domain => domain.domain === userDomain)) {
+      let domain = domains.find(domain => domain.domain === userDomain)
+      if (domain)
+        domain.count++
+    } else {
+      domains.push({ 'domain': userDomain, 'count': 1 })
+    }
+  }
+  return domains.sort((a, b) => a.count - b.count)[0]
+}
+
+console.log(mostCommanEmail());
